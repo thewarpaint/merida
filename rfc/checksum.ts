@@ -29,7 +29,7 @@ export function checksum(rfc: string, doDebug: boolean = false): string {
       const accDelta = lookupValue * reversePositionPlusOne;
       const newAcc = acc + accDelta;
 
-      debug(doDebug, `Processing character: ${char} in position: ${i}`);
+      debug(doDebug, `Processing character "${char}" in position: ${i}`);
       debug(doDebug, `  Lookup value: ${lookupValue} times ${reversePositionPlusOne} (13 - ${i}) equals ${accDelta}`);
       debug(doDebug, `  Old sum value ${acc} plus ${accDelta} equals new sum value ${newAcc}`);
 
@@ -50,7 +50,7 @@ export function checksum(rfc: string, doDebug: boolean = false): string {
   const checksumChar = RFC_ALPHABET[checksumPosition];
 
   debug(doDebug, `The checksum character is the element of the alphabet ` +
-    `in the position ${checksumPosition}: ${checksumChar}`);
+    `in the position ${checksumPosition}: "${checksumChar}"`);
 
   return checksumChar;
 }

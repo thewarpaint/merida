@@ -9,6 +9,13 @@ assertChecksum('GODE561231GR8', '8');
 // Incomplete person RFC tests
 assertRfc('LÓPEZ', 'OBRADOR', 'ANDRÉS MANUEL', '1940-01-01', 'LOOA');
 assertRfc('PEÑA', 'NIETO', 'ENRIQUE', '1966-07-20', 'PENX');
+assertRfc('SAN MARTÍN', 'DÁVALOS', 'DOLORES', '', 'SADD');
+assertRfc('SÁNCHEZ DE LA BARQUERA', 'GÓMEZ', 'MARIO', '', 'SAGM');
+assertRfc('JIMÉNEZ', 'PONCE DE LEÓN', 'ANTONIO', '', 'JIPA');
+assertRfc('DE LA PEÑA', 'RAMÍREZ', 'CARMEN', '', 'PERC');
+assertRfc('SÁNCHEZ', 'DE LOS COBOS', 'MARIO', '', 'SACM');
+assertRfc('GONZÁLEZ', 'Y DURÁN', 'ROBERTO', '', 'GODR');
+assertRfc('DEL VALLE', 'MARTÍNEZ', 'JUAN', '', 'VAMJ');
 
 function assertChecksum(rfc: string, expectedChecksum: string) {
   const actualChecksum = checksum(rfc);
@@ -24,7 +31,7 @@ function assertRfc(
   dateOfBirth: string,
   expectedRfc: string,
 ): void {
-  const actualRfc = calculateForPerson(fatherSurname, motherSurname, givenNames, dateOfBirth, true);
+  const actualRfc = calculateForPerson(fatherSurname, motherSurname, givenNames, dateOfBirth);
 
   console.assert(actualRfc === expectedRfc,
     `RFC for ${fatherSurname} ${motherSurname} ${givenNames} was expected to be "${expectedRfc}", ` +

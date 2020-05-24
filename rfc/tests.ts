@@ -1,4 +1,4 @@
-import {calculateForPerson, checksum} from './checksum.ts';
+import {calculateForPerson, checksum} from './index.ts';
 
 // Company RFCs are 12 characters long
 assertChecksum('SPM1410037E8', '8');

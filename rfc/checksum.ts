@@ -13,6 +13,14 @@ const VOWEL_ACCENTS_MAP: {[key: string]: string} = {
   'Ü': 'U',
 };
 
+const RFC_BLOCKLIST = [
+  'BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO', 'CAKA', 'CAKO', 'COGE',
+  'COJA', 'COJE', 'COJI', 'COJO', 'CULO', 'FETO', 'GUEY', 'JOTO', 'KACA',
+  'KACO', 'KAGA', 'KAGO', 'KAKA', 'KOGE', 'KOJO', 'KULO', 'MAME', 'MAMO',
+  'MEAR', 'MEAS', 'MEON', 'MION', 'MOCO', 'MULA', 'PEDA', 'PEDO', 'PENE',
+  'PUTA', 'PUTO', 'QULO', 'RATA', 'RUIN',
+];
+
 // Assumes rfc is already in compact format and all uppercase
 export function checksum(rfc: string, doDebug: boolean = false): string {
   debug(doDebug, `Passed RFC: ${rfc}`);
@@ -123,6 +131,15 @@ export function calculateForPerson(
   debug(doDebug, `Adding first letter from given names: "${firstLetterFromGivenNames}"`);
 
   rfc += firstLetterFromGivenNames;
+
+  debug(doDebug, `First four letters of rfc are: "${rfc}"`);
+
+  // By now rfc must be 4-characters long, we need to check the blocklist entries
+  if (RFC_BLOCKLIST.indexOf(rfc) !== -1) {
+    rfc = rfc.substring(0, 3) + 'X';
+
+    debug(doDebug, `rfc found in the "inconvenient words" blocklist, changing last letter to X: "${rfc}"`);
+  }
 
   return rfc;
 }

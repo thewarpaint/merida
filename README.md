@@ -7,5 +7,5 @@
 2. Run:
 
     ```
-    deno run ./rfc/checksum.ts
+    deno run ./rfc/tests.ts
     ```

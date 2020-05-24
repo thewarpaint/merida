@@ -21,6 +21,21 @@ const RFC_BLOCKLIST = [
   'PUTA', 'PUTO', 'QULO', 'RATA', 'RUIN',
 ];
 
+const WORD_BLOCKLIST = [
+  'DE',
+  'DEL',
+  'EL',
+  'LA',
+  'LOS',
+  'LAS',
+  'Y',
+  'E',
+  'VAN',
+  'VON',
+  'MC',
+  'MAC',
+];
+
 // Assumes rfc is already in compact format and all uppercase
 export function checksum(rfc: string, doDebug: boolean = false): string {
   debug(doDebug, `Passed RFC: ${rfc}`);
@@ -86,7 +101,7 @@ export function calculateForPerson(
   ): string {
   let rfc = '';
 
-  const normalizedFatherSurname = normalize(fatherSurname);
+  const normalizedFatherSurname = normalize(sanitize(fatherSurname));
 
   debug(doDebug, `Normalized father's surname: "${normalizedFatherSurname}"`);
 
@@ -112,7 +127,7 @@ export function calculateForPerson(
 
   rfc += nextVowelFromFatherSurname;
 
-  const normalizedMotherSurname = normalize(motherSurname);
+  const normalizedMotherSurname = normalize(sanitize(motherSurname));
 
   debug(doDebug, `Normalized mother's surname: "${normalizedMotherSurname}"`);
 
@@ -122,7 +137,7 @@ export function calculateForPerson(
 
   rfc += firstLetterFromMotherSurname;
 
-  const normalizedGivenNames = normalize(givenNames);
+  const normalizedGivenNames = normalize(sanitize(givenNames));
 
   debug(doDebug, `Normalized given names: "${normalizedGivenNames}"`);
 
@@ -144,7 +159,7 @@ export function calculateForPerson(
   return rfc;
 }
 
-// Assumes dirtyString is uppercase
+// Assumes unnormalizedString is uppercase
 function normalize(unnormalizedString: string = ''): string {
   let normalizedString: string = '';
 
@@ -159,6 +174,15 @@ function normalize(unnormalizedString: string = ''): string {
   }
 
   return normalizedString;
+}
+
+// Assumes unsanitizedString is uppercase
+function sanitize(unsanitizedString: string = ''): string {
+  // Remove words in NAME_BLOCKLIST
+  return unsanitizedString
+    .split(' ')
+    .filter((word) => WORD_BLOCKLIST.indexOf(word) === -1)
+    .join(' ');
 }
 
 function debug(enabled: boolean, ...args: any[]): void {

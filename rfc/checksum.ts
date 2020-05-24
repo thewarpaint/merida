@@ -2,6 +2,17 @@
 // 0 is 0, 1 is 1, ..., space is 37, Ñ is 38
 export const RFC_ALPHABET = '0123456789ABCDEFGHIJKLMN&OPQRSTUVWXYZ Ñ';
 
+export const VOWELS = 'AEIOU';
+
+const VOWEL_ACCENTS_MAP: {[key: string]: string} = {
+  'Á': 'A',
+  'É': 'E',
+  'Í': 'I',
+  'Ó': 'O',
+  'Ú': 'U',
+  'Ü': 'U',
+};
+
 // Assumes rfc is already in compact format and all uppercase
 export function checksum(rfc: string, doDebug: boolean = false): string {
   debug(doDebug, `Passed RFC: ${rfc}`);
@@ -55,7 +66,85 @@ export function checksum(rfc: string, doDebug: boolean = false): string {
   return checksumChar;
 }
 
-function debug(enabled: boolean, ...args: any[]) {
+// Assumes all strings are uppercase
+// Date of birth must be in yyyy-mm-dd format
+// See https://en.wikipedia.org/wiki/Spanish_naming_customs
+export function calculateForPerson(
+    fatherSurname: string,
+    motherSurname: string,
+    givenNames: string,
+    dateOfBirth: string,
+    doDebug: boolean = false,
+  ): string {
+  let rfc = '';
+
+  const normalizedFatherSurname = normalize(fatherSurname);
+
+  debug(doDebug, `Normalized father's surname: "${normalizedFatherSurname}"`);
+
+  // Get first letter and the next vowel from fatherSurname
+  const firstLetterFromFatherSurname = normalizedFatherSurname[0];
+
+  debug(doDebug, `Adding first letter from father's surname: "${firstLetterFromFatherSurname}"`);
+
+  rfc += firstLetterFromFatherSurname;
+
+  let nextVowelFromFatherSurname = '';
+
+  // Skip first letter which is already part of the RFC
+  for (let i = 1; i < normalizedFatherSurname.length; i++) {
+    if (VOWELS.indexOf(normalizedFatherSurname[i]) !== -1) {
+      nextVowelFromFatherSurname = normalizedFatherSurname[i];
+
+      break;
+    }
+  }
+
+  debug(doDebug, `Adding next vowel from father's surname: "${nextVowelFromFatherSurname}"`);
+
+  rfc += nextVowelFromFatherSurname;
+
+  const normalizedMotherSurname = normalize(motherSurname);
+
+  debug(doDebug, `Normalized mother's surname: "${normalizedMotherSurname}"`);
+
+  const firstLetterFromMotherSurname = normalizedMotherSurname[0];
+
+  debug(doDebug, `Adding first letter from mother's surname: "${firstLetterFromMotherSurname}"`);
+
+  rfc += firstLetterFromMotherSurname;
+
+  const normalizedGivenNames = normalize(givenNames);
+
+  debug(doDebug, `Normalized given names: "${normalizedGivenNames}"`);
+
+  const firstLetterFromGivenNames = normalizedGivenNames[0];
+
+  debug(doDebug, `Adding first letter from given names: "${firstLetterFromGivenNames}"`);
+
+  rfc += firstLetterFromGivenNames;
+
+  return rfc;
+}
+
+// Assumes dirtyString is uppercase
+function normalize(unnormalizedString: string = ''): string {
+  let normalizedString: string = '';
+
+  for (let i = 0; i < unnormalizedString.length; i++) {
+    const currentChar = unnormalizedString[i];
+
+    if (VOWEL_ACCENTS_MAP[currentChar]) {
+      normalizedString += VOWEL_ACCENTS_MAP[currentChar];
+    } else {
+      normalizedString += currentChar;
+    }
+  }
+
+  return normalizedString;
+}
+
+function debug(enabled: boolean, ...args: any[]): void {
   if (enabled) {
     console.debug.apply(null, args);
   }

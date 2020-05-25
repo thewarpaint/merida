@@ -16,6 +16,8 @@ assertRfc('DE LA PEÑA', 'RAMÍREZ', 'CARMEN', '', 'PERC');
 assertRfc('SÁNCHEZ', 'DE LOS COBOS', 'MARIO', '', 'SACM');
 assertRfc('GONZÁLEZ', 'Y DURÁN', 'ROBERTO', '', 'GODR');
 assertRfc('DEL VALLE', 'MARTÍNEZ', 'JUAN', '', 'VAMJ');
+assertRfc('MARTÍNEZ', '', 'JUAN', '', 'MAJU');
+assertRfc('', 'ZAFRA', 'GERARDA', '', 'ZAGE');
 
 function assertChecksum(rfc: string, expectedChecksum: string) {
   const actualChecksum = checksum(rfc);

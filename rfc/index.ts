@@ -102,50 +102,66 @@ export function calculateForPerson(
   let rfc = '';
 
   const normalizedFatherSurname = normalize(sanitize(fatherSurname));
-
-  debug(doDebug, `Normalized father's surname: "${normalizedFatherSurname}"`);
-
-  // Get first letter and the next vowel from fatherSurname
-  const firstLetterFromFatherSurname = normalizedFatherSurname[0];
-
-  debug(doDebug, `Adding first letter from father's surname: "${firstLetterFromFatherSurname}"`);
-
-  rfc += firstLetterFromFatherSurname;
-
-  let nextVowelFromFatherSurname = '';
-
-  // Skip first letter which is already part of the RFC
-  for (let i = 1; i < normalizedFatherSurname.length; i++) {
-    if (VOWELS.indexOf(normalizedFatherSurname[i]) !== -1) {
-      nextVowelFromFatherSurname = normalizedFatherSurname[i];
-
-      break;
-    }
-  }
-
-  debug(doDebug, `Adding next vowel from father's surname: "${nextVowelFromFatherSurname}"`);
-
-  rfc += nextVowelFromFatherSurname;
-
   const normalizedMotherSurname = normalize(sanitize(motherSurname));
-
-  debug(doDebug, `Normalized mother's surname: "${normalizedMotherSurname}"`);
-
-  const firstLetterFromMotherSurname = normalizedMotherSurname[0];
-
-  debug(doDebug, `Adding first letter from mother's surname: "${firstLetterFromMotherSurname}"`);
-
-  rfc += firstLetterFromMotherSurname;
-
   const normalizedGivenNames = normalize(sanitize(givenNames));
 
+  debug(doDebug, `Normalized father's surname: "${normalizedFatherSurname}"`);
+  debug(doDebug, `Normalized mother's surname: "${normalizedMotherSurname}"`);
   debug(doDebug, `Normalized given names: "${normalizedGivenNames}"`);
 
-  const firstLetterFromGivenNames = normalizedGivenNames[0];
+  if (normalizedFatherSurname && normalizedMotherSurname) {
+    // Get first letter and the next vowel from fatherSurname
+    const firstLetterFromFatherSurname = normalizedFatherSurname[0];
 
-  debug(doDebug, `Adding first letter from given names: "${firstLetterFromGivenNames}"`);
+    debug(doDebug, `Adding first letter from father's surname: "${firstLetterFromFatherSurname}"`);
 
-  rfc += firstLetterFromGivenNames;
+    rfc += firstLetterFromFatherSurname;
+
+    if (normalizedFatherSurname.length > 2) {
+      // If the father's surname is more than 2 letters long, we use the next first vowel
+      let nextVowelFromFatherSurname = '';
+
+      // Skip first letter which is already part of the RFC
+      for (let i = 1; i < normalizedFatherSurname.length; i++) {
+        if (VOWELS.indexOf(normalizedFatherSurname[i]) !== -1) {
+          nextVowelFromFatherSurname = normalizedFatherSurname[i];
+
+          break;
+        }
+      }
+
+      debug(doDebug, `Adding next vowel from father's surname: "${nextVowelFromFatherSurname}"`);
+
+      rfc += nextVowelFromFatherSurname;
+    } else {
+      debug(doDebug, `The normalized father's surname is 1 or 2 letters long, we will only use its first letter`);
+    }
+
+    const firstLetterFromMotherSurname = normalizedMotherSurname[0];
+
+    debug(doDebug, `Adding first letter from mother's surname: "${firstLetterFromMotherSurname}"`);
+
+    rfc += firstLetterFromMotherSurname;
+
+    const firstLetterFromGivenNames = normalizedGivenNames[0];
+
+    debug(doDebug, `Adding first letter from given names: "${firstLetterFromGivenNames}"`);
+
+    rfc += firstLetterFromGivenNames;
+  } else {
+    // If the person has only one surname, we'll take the first two letters of said surname
+    // and the first two letters of the given name
+    const normalizedSurname = normalizedFatherSurname || normalizedMotherSurname;
+
+    const firstTwoLettersFromSurname = normalizedSurname.substring(0, 2);
+    const firstTwoLettersFromGivenNames = normalizedGivenNames.substring(0, 2);
+
+    debug(doDebug, `The person only has one surname, we will use ` +
+      `the first two letters of the surname: "${firstTwoLettersFromSurname}" ` +
+      `and the first two letters of the given names: "${firstTwoLettersFromGivenNames}"`);
+
+    rfc += firstTwoLettersFromSurname + firstTwoLettersFromGivenNames;
+  }
 
   debug(doDebug, `First four letters of rfc are: "${rfc}"`);
 

@@ -143,11 +143,22 @@ export function calculateForPerson(
 
     rfc += firstLetterFromMotherSurname;
 
-    const firstLetterFromGivenNames = normalizedGivenNames[0];
+    if (rfc.length === 3) {
+      const firstLetterFromGivenNames = normalizedGivenNames[0];
 
-    debug(doDebug, `Adding first letter from given names: "${firstLetterFromGivenNames}"`);
+      debug(doDebug, `Adding first letter from given names: "${firstLetterFromGivenNames}"`);
 
-    rfc += firstLetterFromGivenNames;
+      rfc += firstLetterFromGivenNames;
+    } else if (rfc.length === 2) {
+      const firstTwoLettersFromGivenNames = normalizedGivenNames.substring(0, 2);
+
+      debug(doDebug, `Father's surname only had one letter, we will use the first two letters ` +
+        `from the given names: "${firstTwoLettersFromGivenNames}"`);
+
+      rfc += firstTwoLettersFromGivenNames;
+    } else {
+      // Case not covered by the algorithm!?
+    }
   } else {
     // If the person has only one surname, we'll take the first two letters of said surname
     // and the first two letters of the given name

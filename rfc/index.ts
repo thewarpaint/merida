@@ -183,7 +183,38 @@ export function calculateForPerson(
     debug(doDebug, `rfc found in the "inconvenient words" blocklist, changing last letter to X: "${rfc}"`);
   }
 
+  const parsedDateOfBirth: string = parseDateOfBirth(dateOfBirth, doDebug);
+
+  if (parsedDateOfBirth === '') {
+    debug(doDebug, `Date of birth "${dateOfBirth}" couldn't be parsed, stopping the process!`);
+
+    return '';
+  }
+
+  rfc += parsedDateOfBirth;
+
+  debug(doDebug, `=> Next six letters of the RFC are: "${parsedDateOfBirth}"`);
+
   return rfc;
+}
+
+// Date of birth must be in yyyy-mm-dd format
+function parseDateOfBirth(dateOfBirth: string, doDebug: boolean): string {
+  if (dateOfBirth.length !== 10) {
+    debug(doDebug, `Expected date of birth "${dateOfBirth}" to be of length 10, unable to parse`);
+
+    return '';
+  }
+
+  const yearLastTwoDigits = dateOfBirth.substring(2, 4);
+  const month = dateOfBirth.substring(5, 7);
+  const day = dateOfBirth.substring(8, 10);
+
+  debug(doDebug, `Adding last two digits of the date of birth's year: "${yearLastTwoDigits}"`);
+  debug(doDebug, `Adding two digits of the date of birth's month: "${month}"`);
+  debug(doDebug, `Adding two digits of the date of birth's day: "${day}"`);
+
+  return `${yearLastTwoDigits}${month}${day}`;
 }
 
 // Assumes unnormalizedString is uppercase

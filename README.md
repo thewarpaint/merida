@@ -27,3 +27,9 @@ RFC ("Registro Federal de Contribuyentes") is the Mexican tax id number.
 - https://www.infomex.org.mx/jspsi/documentos/2005/seguimiento/06101/0610100162005_065.doc
 - https://portalsat.plataforma.sat.gob.mx/ConsultaRFC/
 - https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/mx/rfc.py
+
+#### Backlog
+
+- [] Add date of birth logic
+- [] Add homonymy logic
+- [] Add checksum logic
